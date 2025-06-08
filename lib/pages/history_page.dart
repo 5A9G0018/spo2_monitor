@@ -40,7 +40,7 @@ class HistoryPage extends StatelessWidget {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: provider.history.isEmpty
+        child: provider.feeds.isEmpty
             ? const Center(
           child: Text(
             '尚無紀錄',
@@ -50,10 +50,11 @@ class HistoryPage extends StatelessWidget {
             : ListView.builder(
           padding:
           const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-          itemCount: provider.history.length,
-          itemBuilder: (context, index) {
-            final record = provider.history[index];
-            final spo2Color = getSpo2Color(record.spo2);
+          itemCount: provider.feeds.length,
+          itemBuilder: (context, myIndex) {
+            int index = provider.feeds.length - 1 - myIndex;
+            final record = provider.feeds[index];
+            final spo2Color = getSpo2Color(int.parse(record['field1']));
 
             return Container(
               margin: const EdgeInsets.symmetric(vertical: 8),
@@ -100,7 +101,7 @@ class HistoryPage extends StatelessWidget {
                   ),
                 ),
                 title: Text(
-                  'SpO₂: ${record.spo2}%',
+                  'SpO₂: ${record['field1']}%',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
@@ -114,7 +115,7 @@ class HistoryPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '心率: ${record.heartRate} bpm',
+                        '心率: ${record['field2']} bpm',
                         style: const TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w600,
@@ -123,7 +124,7 @@ class HistoryPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        formatTimestamp(record.timestamp.toLocal()),
+                        formatTimestamp(DateTime.parse(record['created_at']).toLocal()),
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey.shade700,

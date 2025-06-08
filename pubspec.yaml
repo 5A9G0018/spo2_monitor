@@ -11,12 +11,11 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.0.0
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
   path_provider: ^2.0.15
   flutter_blue_plus: ^1.30.0
   hive_generator: ^2.0.1
   build_runner: ^2.4.6
+  flutter_thingspeak: ^1.2.1
 
 dev_dependencies:
   flutter_test:

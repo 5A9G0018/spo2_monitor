@@ -3,9 +3,14 @@ import 'package:provider/provider.dart';
 import '../spo2_provider.dart';
 import 'history_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<Spo2Provider>(context);
@@ -96,27 +101,6 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 40),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    provider.saveRecord();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('紀錄已儲存')),
-                    );
-                  },
-                  icon: const Icon(Icons.save_alt),
-                  label: const Text('儲存紀錄'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.teal,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 32, vertical: 14),
-                    textStyle: const TextStyle(fontSize: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
                 OutlinedButton.icon(
                   onPressed: () {
                     Navigator.push(
@@ -143,5 +127,12 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
+  }
+  @override
+  void initState() {
+    final provider = Provider.of<Spo2Provider>(context, listen: false);
+    provider.updateData();
+    // TODO: implement initState
+    super.initState();
   }
 }

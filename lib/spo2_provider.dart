@@ -1,32 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'spo2_record.dart';
+import 'package:flutter_thingspeak/flutter_thingspeak.dart';
 
 class Spo2Provider extends ChangeNotifier {
-  int spo2 = 98;
-  int heartRate = 72;
-  List<Spo2Record> history = [];
+  int spo2 = 0;
+  int heartRate = 0;
+  List feeds = [];
 
-  void updateData(int newSpo2, int newHeartRate) {
-    spo2 = newSpo2;
-    heartRate = newHeartRate;
-    notifyListeners();
-  }
-
-  void saveRecord() async {
-    final box = Hive.box<Spo2Record>('spo2_records');
-    final record = Spo2Record(
-      spo2: spo2,
-      heartRate: heartRate,
-      timestamp: DateTime.now(),
+  Future<void> updateData() async {
+    final flutterThingSpeak = FlutterThingspeakClient(
+      channelID: '2982935',
+      readApiKey: '2C349AVSSYJWLKFZ', // 指定 Read API Key
     );
-    await box.add(record);
-    loadHistory();
-  }
+    await flutterThingSpeak.initialize();
+    final result = await flutterThingSpeak.getAllData();
 
-  void loadHistory() {
-    final box = Hive.box<Spo2Record>('spo2_records');
-    history = box.values.toList().reversed.toList();
+    feeds = result['feeds'];
+
+    for (var feed in feeds) {
+      spo2 = int.parse(feed['field1']);
+      heartRate = int.parse(feed['field2']);
+    }
+
     notifyListeners();
   }
 }
